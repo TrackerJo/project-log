@@ -1,0 +1,83 @@
+
+.active, .collapsible:hover {
+    background-color: #555; 
+}
+
+
+
+
+.content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: rgb(33, 37, 43);
+    width: 100vw;
+    position: relative;
+    left: -25px;
+}
+
+.tasks-pane{
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    width: 130%;
+    position: relative;
+    left: -20px;
+}
+
+.tasks-pane-header{
+    line-height: 22px;
+    color: var(--vscode-sideBarSectionHeader-foreground);
+    background-color: var(--vscode-sideBarSectionHeader-background);
+    border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
+    position: relative;
+    align-items: center;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: flex;
+    font-size: 11px;
+    font-weight: 700;
+    height: 22px;
+    overflow: hidden;
+}
+
+.tasks-pane-header-title{
+    font-size: 11px;
+    min-width: 3ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    text-transform: uppercase;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    display: block;
+}
+
+.tasks-pane-indicator {
+    color: var(--vscode-icon-foreground);
+
+}
+
+.tasks-pane.active .tasks-pane-header{
+    opacity: 1;
+    outline-color: var(--vscode-focusBorder);
+    outline-offset: -1px;
+    outline-style: solid;
+    outline-width: 1px;
+}
+
+#tasks-list {
+    overflow: scroll;
+    max-height: 150px;
+}
+
+#completed-tasks-list {
+    overflow: scroll;
+    max-height: 150px;
+}

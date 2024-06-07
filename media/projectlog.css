@@ -1,0 +1,17 @@
+body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+.window {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.recources-list {
+    overflow: scroll;
+    max-height: 300px;
+}
