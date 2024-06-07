@@ -8,14 +8,17 @@ import { GlobalStorageService } from './storage';
 export function activate(context: vscode.ExtensionContext) {
 
 	let storageManager = new GlobalStorageService(context.globalState);
-
-	const sidebarProvider = new SidebarProvider(context.extensionUri, storageManager);
 	const item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-
+	const timer = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+	const sidebarProvider = new SidebarProvider(context.extensionUri, storageManager, timer);
+	
 	item.text = "$(notebook) Add Resource";
 	item.command = 'projectlog.addResource';
 	item.show();
 	checkToDos(storageManager, sidebarProvider);
+	const project = vscode.workspace.name;
+
+	startTimer(storageManager, sidebarProvider, timer);
 
 	//Add onStartupFinished event listener
 	
@@ -81,6 +84,179 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.window.showErrorMessage("Resource name and link are required");
           }
 	}));
+
+	context.subscriptions.push( vscode.commands.registerCommand('projectlog.viewTimer', async (id: number) => {
+		await vscode.commands.executeCommand("workbench.view.extension.projectlog-sidebar-view");
+		setTimeout(() => {
+			sidebarProvider._view?.webview.postMessage({
+				type: "view-timer",
+			});
+		}, 500);
+		
+	}));
+
+	context.subscriptions.push( vscode.commands.registerCommand('projectlog.startTimer', async (id: number) => {
+		const project = vscode.workspace.name;
+		storageManager.setValue(project + '-continue-timer', true);
+	}));
+
+	context.subscriptions.push( vscode.commands.registerCommand('projectlog.stopTimer', async (id: number) => {
+		const project = vscode.workspace.name;
+		storageManager.setValue(project + '-continue-timer', false);
+	}));
+
+	context.subscriptions.push( vscode.commands.registerCommand('projectlog.resetTimer', async (id: number) => {
+		const project = vscode.workspace.name;
+		storageManager.setValue(project + '-time', {
+			minutes: 0,
+			seconds: 0,
+			hours: 0
+		});
+		sidebarProvider._view?.webview.postMessage({
+			type: "update-timer",
+			time: {
+				minutes: '00',
+				seconds: '00',
+				hours: 0
+			}
+		});
+		timer.text = "$(clock) 0:00:00";
+	}));
+
+	context.subscriptions.push( vscode.commands.registerCommand('projectlog.logTimer', async (id: number) => {
+
+		const project = vscode.workspace.name;
+		storageManager.setValue(project + '-continue-timer', false);
+		const time = storageManager.getValue<{minutes: number, seconds: number, hours: number}>(project + '-time');
+		const logs = storageManager.getValue<Object[]>(project + "-logs") || [];
+		let description = await vscode.window.showInputBox({ placeHolder: "Enter description of work for the log" });
+		if(!description){
+			description = 'No description';
+		}
+		logs.push({
+			time: time,
+			description: description
+		});
+		storageManager.setValue(project + "-logs", logs);
+		sidebarProvider._view?.webview.postMessage({
+			type: "update-logs",
+			logs: logs,
+		});
+		storageManager.setValue(project + '-time', {
+			minutes: 0,
+			seconds: 0,
+			hours: 0
+		});
+		sidebarProvider._view?.webview.postMessage({
+			type: "update-timer",
+			time: {
+				minutes: '00',
+				seconds: '00',
+				hours: 0
+			}
+		});
+		timer.text = "$(clock) 0:00:00";
+		
+	}));
+
+	context.subscriptions.push( vscode.commands.registerCommand('projectlog.showTimerControls', async () => {
+		const choice = await vscode.window.showQuickPick([
+			{
+				label: "Start Timer",
+				description: "Start the timer",
+				picked: true
+			},
+			{
+				label: "Stop Timer",
+				description: "Stop the timer"
+			},
+			{
+				label: "Reset Timer",
+				description: "Reset the timer"
+			},
+			{
+				label: "Log Timer",
+				description: "Log the timer"
+			},
+			{
+				label: "View Timer",
+				description: "View the timer"
+			}
+		]);
+		if(!choice){
+			return;
+		}
+		switch(choice.label){
+			case "Start Timer":
+				vscode.commands.executeCommand('projectlog.startTimer');
+				break;
+			case "Stop Timer":
+				vscode.commands.executeCommand('projectlog.stopTimer');
+				break;
+			case "Reset Timer":
+				vscode.commands.executeCommand('projectlog.resetTimer');
+				break;
+			case "Log Timer":
+				vscode.commands.executeCommand('projectlog.logTimer');
+				break;
+			case "View Timer":
+				vscode.commands.executeCommand('projectlog.viewTimer');
+				break;
+		}
+	}));
+
+}
+
+function startTimer(storageManager: GlobalStorageService, sidebarProvider: SidebarProvider, timer: vscode.StatusBarItem){
+	
+	let seconds = 0;
+	let minutes = 0;
+	let hours = 0;
+	timer.text = "$(clock) 0:00:00";
+	timer.command = 'projectlog.showTimerControls';
+	timer.show();
+	setInterval(() => {
+		const project = vscode.workspace.name;
+		const continueTimer = storageManager.getValue<boolean>(project + '-continue-timer');
+		const time = storageManager.getValue<{minutes: number, seconds: number, hours: number}>(project + '-time');
+		if(time){
+			seconds = time.seconds;
+			minutes = time.minutes;
+			hours = time.hours;
+		}
+		if(!continueTimer){
+			return;
+		}
+		seconds++;
+		if(seconds === 60){
+			minutes++;
+			seconds = 0;
+		}
+		if(minutes === 60){
+			hours++;
+			minutes = 0;
+		}
+		//Update the timer
+		storageManager.setValue(project + '-time', {
+			minutes: minutes,
+			seconds: seconds,
+			hours: hours
+		});
+		//Update sidebar
+		
+		let hoursString = hours;
+		let minutesString = minutes < 10 ? '0' + minutes : minutes;
+		let secondsString = seconds < 10 ? '0' + seconds : seconds;
+		sidebarProvider._view?.webview.postMessage({
+			type: "update-timer",
+			time: {
+				minutes: minutesString,
+				seconds: secondsString,
+				hours: hoursString
+			}
+		});
+		timer.text = `$(clock) ${hoursString}:${minutesString}:${secondsString}`;
+	}, 1000);
 
 }
 

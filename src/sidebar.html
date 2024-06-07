@@ -17,48 +17,88 @@
     </head>
     <body>
         <div class="window">
-            <div class="main-window">
-                <h2 class="project-name"></h2>
-                <br>
-                <h3>Resources</h3>
+            
+            <div class="pane vertical resources-pane active">
+                <div class="pane-header">
+                    <div class="codicon codicon-chevron-down pane-indicator"></div>
+                    <h3 class="pane-header-title">Resources</h3>
+                </div>
+            </div>
+            
+            <div class="content resources-content" style="height: 100vh;">
                 <div class="resources-list">
 
                 </div>
                 <br>
                 <button class="add-resource-button">Add Resource</button>
             </div>
-            <div class="more-options">
-               
-                <div class="tasks-pane vertical tasks-list-pane">
-                    <div class="tasks-pane-header">
-                        <div class="codicon codicon-chevron-right tasks-pane-indicator"></div>
-                        <h3 class="tasks-pane-header-title">Tasks</h3>
-                    </div>
+            <div class="pane vertical timer-pane">
+                <div class="pane-header">
+                    <div class="codicon codicon-chevron-right pane-indicator"></div>
+                    <h3 class="pane-header-title">Timer</h3>
                 </div>
-                
-                <div class="content tasks-content">
-                    <form id="tasks-form">
-                        <input type="text" id="tasks-input"> 
-                    </form>
-                    <div id="tasks-list">
-                       
+            </div>
+            
+            <div class="content timer-content">
+                <div class="timer">
+                    <div class="timer-display">
+                        <span class="time-hours">00</span>:<span class="time-minutes">00</span>:<span class="time-seconds">00</span>
                     </div>
-                </div>
-                <div class="tasks-pane vertical completed-tasks-pane">
-                    <div class="tasks-pane-header">
-                        <div class="codicon codicon-chevron-right tasks-pane-indicator"></div>
-                        <h3 class="tasks-pane-header-title">Completed Tasks</h3>
-                    </div>
-                </div>
-                
-                <div class="content completed-tasks-content">
-                    
-                    <div id="completed-tasks-list">
-                       
+                    <div class="timer-controls">
+                        <button class="start-timer">Start</button>
+                        <button class="stop-timer">Stop</button>
+                        <button class="reset-timer">Reset</button>
+                        <button class="log-timer">Log</button>
                     </div>
                 </div>
             </div>
+
+            <div class="pane vertical logs-pane">
+                <div class="pane-header">
+                    <div class="codicon codicon-chevron-right pane-indicator"></div>
+                    <h3 class="pane-header-title">Logs</h3>
+                </div>
+            </div>
+            
+            <div class="content logs-content">
+                <div class="logs">
+                    <div class="logs-list">
+                        
+                    </div>
+                </div>
+            </div>
+        
+            
+            <div class="pane vertical tasks-list-pane">
+                <div class="pane-header">
+                    <div class="codicon codicon-chevron-right pane-indicator"></div>
+                    <h3 class="pane-header-title">Tasks</h3>
+                </div>
+            </div>
+            
+            <div class="content tasks-content">
+                <form id="tasks-form">
+                    <input type="text" id="tasks-input"> 
+                </form>
+                <div id="tasks-list">
+                    
+                </div>
+            </div>
+            <div class="pane vertical completed-pane">
+                <div class="pane-header">
+                    <div class="codicon codicon-chevron-right pane-indicator"></div>
+                    <h3 class="pane-header-title">Completed Tasks</h3>
+                </div>
+            </div>
+            
+            <div class="content completed-tasks-content">
+                
+                <div id="completed-tasks-list">
+                    
+                </div>
+            </div>
         </div>
+
         
        
 

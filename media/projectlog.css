@@ -15,3 +15,46 @@ body {
     overflow: scroll;
     max-height: 300px;
 }
+
+.timer{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column ;
+    align-items: center;
+    padding: 0 10px;
+    height: 50px;
+    /* background-color: var(--vscode-editor-background); */
+    /* border-bottom: 1px solid var(--vscode-editor-foreground); */
+}
+
+
+.timer .timer-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--vscode-editor-foreground);
+    /* background-color: var(--vscode-editor-background); */
+    /* border: 1px solid var(--vscode-editor-foreground); */
+    cursor: pointer;
+    padding: 10px;
+
+}
+
+
+.timer .timer-controls{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* width: 50px; */
+    /* height: 50px; */
+    background-color: var(--vscode-editor-background);
+    border: 1px solid var(--vscode-editor-foreground);
+    cursor: pointer;
+}
+
+.resources-list, .logs-list{
+    overflow: scroll;
+    max-height: 90%;
+}

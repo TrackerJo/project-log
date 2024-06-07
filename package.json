@@ -20,6 +20,13 @@
     "onCommand:projectlog.addTask",
     "onCommand:projectlog.viewTasks",
     "onCommand:projectlog.addResource",
+    "onCommand:projectlog.viewTimer",
+    "onCommand:projectlog.startTimer",
+    "onCommand:projectlog.stopTimer",
+    "onCommand:projectlog.resetTimer",
+    "onCommand:projectlog.logTimer",
+    "onCommand:projectlog.showTimerControls",
+
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
@@ -59,6 +66,36 @@
       {
         "command": "projectlog.addResource",
         "title": "Add Resource",
+        "category": "Project Log"
+      },
+      {
+        "command": "projectlog.viewTimer",
+        "title": "View Timer",
+        "category": "Project Log"
+      },
+      {
+        "command": "projectlog.startTimer",
+        "title": "Start Timer",
+        "category": "Project Log"
+      },
+      {
+        "command": "projectlog.stopTimer",
+        "title": "Stop Timer",
+        "category": "Project Log"
+      },
+      {
+        "command": "projectlog.resetTimer",
+        "title": "Reset Timer",
+        "category": "Project Log"
+      },
+      {
+        "command": "projectlog.logTimer",
+        "title": "Log Timer",
+        "category": "Project Log"
+      },
+      {
+        "command": "projectlog.showTimerControls",
+        "title": "Show Timer Controls",
         "category": "Project Log"
       }
     ]

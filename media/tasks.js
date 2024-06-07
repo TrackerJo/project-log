@@ -134,9 +134,7 @@
             });
             tasksList.appendChild(taskItem);
         });
-        if (tasksContent.style.maxHeight){
-            tasksContent.style.maxHeight = tasksContent.scrollHeight + "px";
-        }
+      
         //Save the todos
         saveTasks();
     }
@@ -214,9 +212,7 @@
             });
             completedList.appendChild(taskItem);
         });
-        if (completedContent.style.maxHeight){
-            completedContent.style.maxHeight = completedContent.scrollHeight + "px";
-           }
+        
         //Save the todos
         saveTasks();
     }
@@ -241,8 +237,31 @@
 
                 break;
             case 'view-tasks':
+                //Remove the active class from all panes
+                const activePane = document.querySelector('.pane.active');
+                if(activePane){
+                    activePane.classList.remove('active');
+                    const indicator = activePane.querySelector('.pane-indicator');
+                    if(indicator.classList.contains('codicon-chevron-down')){
+                        indicator.classList.remove('codicon-chevron-down');
+                        indicator.classList.add('codicon-chevron-right');
+                        
+                    } else {
+                        indicator.classList.remove('codicon-chevron-right');
+                        indicator.classList.add('codicon-chevron-down');
+
+                    }
+                    const content = activePane.nextElementSibling;
+                    if (content.style.height){
+                        content.style.height = null;
+                    } else {
+                        content.style.height = "100vh";
+
+
+                    }
+                }
                 tasksListPane.classList.toggle("active");
-                const indicator = tasksListPane.querySelector('.tasks-pane-indicator');
+                const indicator = tasksListPane.querySelector('.pane-indicator');
 
                 if(indicator.classList.contains('codicon-chevron-down')){
                     indicator.classList.remove('codicon-chevron-down');
@@ -254,10 +273,10 @@
 
                 }
                 const content = tasksListPane.nextElementSibling;
-                if (content.style.maxHeight){
-                    content.style.maxHeight = null;
+                if (content.style.height){
+                    content.style.height = null;
                 } else {
-                    content.style.maxHeight = content.scrollHeight + "px";
+                    content.style.height = "100vh";
                 } 
 
 
@@ -273,12 +292,35 @@
         });
     });
 
-    const panes = document.querySelectorAll(".tasks-pane");
+    const panes = document.querySelectorAll(".pane");
 
     for (let i = 0; i < panes.length; i++) {
         panes[i].addEventListener("click", function() {
+            //Remove the active class from all panes
+            const activePane = document.querySelector('.pane.active');
+            if(activePane){
+                activePane.classList.remove('active');
+                const indicator = activePane.querySelector('.pane-indicator');
+                if(indicator.classList.contains('codicon-chevron-down')){
+                    indicator.classList.remove('codicon-chevron-down');
+                    indicator.classList.add('codicon-chevron-right');
+                    
+                } else {
+                    indicator.classList.remove('codicon-chevron-right');
+                    indicator.classList.add('codicon-chevron-down');
+
+                }
+                const content = activePane.nextElementSibling;
+                if (content.style.height){
+                    content.style.height = null;
+                } else {
+                    content.style.height = "100vh";
+
+
+                }
+            }
             this.classList.toggle("active");
-            const indicator = this.querySelector('.tasks-pane-indicator');
+            const indicator = this.querySelector('.pane-indicator');
             console.log(indicator);
             if(indicator.classList.contains('codicon-chevron-down')){
                 indicator.classList.remove('codicon-chevron-down');
@@ -290,10 +332,10 @@
 
             }
             const content = this.nextElementSibling;
-            if (content.style.maxHeight){
-                content.style.maxHeight = null;
+            if (content.style.height){
+                content.style.height = null;
             } else {
-                content.style.maxHeight = content.scrollHeight + "px";
+                content.style.height = "100vh";
             } 
         });
     }

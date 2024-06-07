@@ -8,16 +8,16 @@
 
 .content {
     padding: 0 18px;
-    max-height: 0;
+    height: 0;
     overflow: hidden;
-    transition: max-height 0.2s ease-out;
+    transition: height 0.2s ease-out;
     background-color: rgb(33, 37, 43);
     width: 100vw;
     position: relative;
     left: -25px;
 }
 
-.tasks-pane{
+.pane{
     display: flex;
     flex-direction: column;
 
@@ -28,7 +28,7 @@
     left: -20px;
 }
 
-.tasks-pane-header{
+.pane-header{
     line-height: 22px;
     color: var(--vscode-sideBarSectionHeader-foreground);
     background-color: var(--vscode-sideBarSectionHeader-background);
@@ -44,7 +44,7 @@
     overflow: hidden;
 }
 
-.tasks-pane-header-title{
+.pane-header-title{
     font-size: 11px;
     min-width: 3ch;
     overflow: hidden;
@@ -59,12 +59,12 @@
     display: block;
 }
 
-.tasks-pane-indicator {
+.pane-indicator {
     color: var(--vscode-icon-foreground);
 
 }
 
-.tasks-pane.active .tasks-pane-header{
+.pane.active .pane-header{
     opacity: 1;
     outline-color: var(--vscode-focusBorder);
     outline-offset: -1px;
@@ -72,12 +72,7 @@
     outline-width: 1px;
 }
 
-#tasks-list {
+#completed-tasks-list, #tasks-list{
     overflow: scroll;
-    max-height: 150px;
-}
-
-#completed-tasks-list {
-    overflow: scroll;
-    max-height: 150px;
+    max-height: 90%;
 }
