@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "icon": "media/extension_icon.png",
   "publisher": "trackerjo",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/TrackerJo/project-log"
