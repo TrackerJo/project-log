@@ -1,8 +1,9 @@
 {
   "name": "project-log",
   "displayName": "Project Log",
-  "description": "Log projects with documentation and other useful resources",
-  "version": "0.0.1",
+  "description": "Create a log of all resources used in project, tasks that need to be completed, and completed tasks and how much time it took to complete them",
+  "version": "0.1.0",
+  "icon": "media/extension_icon.png",
   "publisher": "trackerjo",
   "repository": {
     "type": "git",
