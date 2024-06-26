@@ -7,7 +7,8 @@
     let logs = [];
 
     const resourcesList = document.querySelector('.resources-list');
-    const addResourceButton = document.querySelector('.add-resource-button');
+    const addResourceButton = document.querySelector('#add-resource-button');
+    const addLogButton = document.querySelector('#add-log-button');
     const timeHours = document.querySelector('.time-hours');
     const timeMinutes = document.querySelector('.time-minutes');
     const timeSeconds = document.querySelector('.time-seconds');
@@ -17,6 +18,8 @@
     const logTimer = document.querySelector('.log-timer');
     const logsList = document.querySelector('.logs-list');
     const timerPane = document.querySelector('.timer-pane');
+    const totalLogTime = document.querySelector('.log-total-time');
+    const logDivider = document.querySelector('.divider');
 
     document.addEventListener('DOMContentLoaded', function () {
         vscode.postMessage({
@@ -30,6 +33,12 @@
         });
         vscode.postMessage({
             type: 'get-logs'
+        });
+    });
+
+    addLogButton.addEventListener('click', function(){
+        vscode.postMessage({
+            type: 'show-add-log-form'
         });
     });
 
@@ -169,6 +178,14 @@
         saveResources();
     }
 
+    function saveLogs(){
+        vscode.postMessage({
+            type: 'save-logs',
+            logs: logs,
+            projectName: projectName
+        });
+    }
+
     stopTimer.addEventListener('click', function(){
         vscode.postMessage({
             type: 'stop-timer'
@@ -197,14 +214,23 @@
 
     function renderLogs(){
         logsList.innerHTML = '';
+        let totalHours = 0;
+        let totalMinutes = 0;
+        let totalSeconds = 0;
         logs.forEach(function(log){
+            totalHours += parseInt(log.time.hours);
+            totalMinutes += parseInt(log.time.minutes);
+            totalSeconds += parseInt(log.time.seconds);
+
             const logDiv = document.createElement('div');
+            logDiv.id = `log-${log.id}`;
             logDiv.style.padding = '5px';
             logDiv.style.fontSize = '14px';
             logDiv.style.display = 'flex';
             logDiv.style.justifyContent = 'space-between';
             const logTextDiv = document.createElement('div');
             logTextDiv.style.width = '85%';
+            logTextDiv.style.display = 'flex';
             const logText = document.createElement('span');
             logText.textContent = log.description;
             logTextDiv.appendChild(logText);
@@ -232,13 +258,32 @@
             deleteButton.style.margin = '5px';
             deleteButton.addEventListener('click', function(){
                 logs = logs.filter(function(item){
-                    return item.description !== log.description && item.time !== log.time; 
+                    return item.id !== log.id; 
                 });
                 renderLogs();
             });
             logDiv.appendChild(deleteButton);
             logsList.appendChild(logDiv);
         });
+        let totalMinutesFromSeconds = Math.floor(totalSeconds / 60);
+        totalSeconds = totalSeconds % 60;
+        totalMinutes += totalMinutesFromSeconds;
+        let totalHoursFromMinutes = Math.floor(totalMinutes / 60);
+        totalMinutes = totalMinutes % 60;
+        totalHours += totalHoursFromMinutes;
+        if(totalHours > 0){
+            totalLogTime.textContent = `Total Time: ${totalHours}h ${totalMinutes}m ${totalSeconds}s`;
+        } else if(totalMinutes > 0){
+            totalLogTime.textContent = `Total Time: ${totalMinutes}m ${totalSeconds}s`;
+        } else {
+            totalLogTime.textContent = `Total Time: ${totalSeconds}s`;
+        }
+        logDivider.style.display = 'block';
+        if(totalHours === 0 && totalMinutes === 0 && totalSeconds === 0){
+            totalLogTime.textContent = '';
+            logDivider.style.display = 'none';
+        }
+        saveLogs();
     }
 
     

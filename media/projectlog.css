@@ -58,3 +58,119 @@ body {
     overflow: scroll;
     max-height: 90%;
 }
+
+
+
+.actions {
+    display: none;
+    margin-left: auto;
+}
+
+.active .actions {
+    display: flex;
+}
+
+.pane-header:hover .actions {
+    display: flex;
+}
+
+.monaco-toolbar {
+    height: 100%;
+}
+
+.monaco-action-bar {
+    height: 100%;
+    white-space: nowrap;
+}
+
+.monaco-action-bar .actions-container {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+}
+
+.monaco-action-bar .action-item {
+    align-items: center;
+    cursor: pointer;
+    display: block;
+    justify-content: center;
+    position: relative;
+    padding-right: 5px;
+}
+
+.monaco-pane-view .pane>.pane-header>.actions .action-item {
+    margin-right: 4px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.monaco-pane-view .pane>.pane-header>.actions .action-label {
+    padding: 2px;
+}
+
+.monaco-workbench .codicon[class*=codicon-] {
+    font-size: 16px;
+}
+
+.monaco-action-bar .action-item .codicon {
+    align-items: center;
+    display: flex;
+    height: 16px;
+    width: 16px;
+}
+
+.monaco-workbench .codicon {
+    /* color: var(--vscode-icon-foreground); */
+}
+
+.monaco-action-bar .action-label {
+    border-radius: 5px;
+    color: var(--vscode-foreground);
+
+
+
+}
+
+
+.action-label:active {
+    outline: 0 !important;
+}
+
+.action-label:hover {
+    outline: 1px dashed var(--vscode-toolbar-hoverOutline);
+    outline-offset: -1px;
+    background-color: var(--vscode-toolbar-hoverBackground);
+
+
+
+}
+
+.action-label:focus {
+    opacity: 1;
+    outline-color: var(--vscode-focusBorder);
+    outline-offset: -1px;
+    outline: 0 !important;
+
+    outline-style: solid;
+    outline-width: 1px;
+}
+
+.divider {
+    border-bottom: 1px solid gray;
+    width: 100%;
+    margin: 0;
+    height: 1px;
+
+
+}
+
+.log-total-time {
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 5px;
+    margin-right: 5px;
+    color: grey;
+}

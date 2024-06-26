@@ -27,6 +27,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
+    function generateId(){
+      //Generate a random id with 16 characters with a mix of numbers and letters
+      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+
+
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
         
@@ -158,6 +164,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           logs.push({
             time: time,
             description: description,
+            id: generateId(),
           });
           this._storage.setValue(project + "-logs", logs);
           this._storage.setValue(project + "-time", {
@@ -174,7 +181,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             time: {
               minutes: "00",
               seconds: "00",
-              hours: 0,
+              hours: "0",
             },
           });
           this._timer.text = "$(clock) 0:00:00";
@@ -198,6 +205,57 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             time: time,
           });
           break;
+        }
+        case "save-logs": {
+          const project = data.projectName;
+          this._storage.setValue(project + "-logs", data.logs);
+          break;
+        }
+        case "show-add-log-form": {
+          const project = vscode.workspace.name;
+          const logs = this._storage.getValue<Object[]>(project + "-logs") || [];
+          const logDescription = await vscode.window.showInputBox({placeHolder: "Enter description of work for the log"});
+          if (!logDescription){
+            vscode.window.showErrorMessage("Description is required");
+            return;
+          }
+          const time = await vscode.window.showInputBox({placeHolder: "Enter time spent on the task (xxh xxm xxs)"});
+          if (!time){
+            vscode.window.showErrorMessage("Time is required");
+            return;
+          }
+          const timeArr = time.split(" ");
+          let hours = "0";
+          let minutes = "0";
+          let seconds = "0";
+          for (let i = 0; i < timeArr.length; i++){
+            if (timeArr[i].includes("h")){
+              hours = timeArr[i].replace("h", "");
+            } else if (timeArr[i].includes("m")){
+              minutes = timeArr[i].replace("m", "");
+              
+            } else if (timeArr[i].includes("s")){
+              seconds = timeArr[i].replace("s", "");
+              
+            }
+          }
+          logs.push({
+            time: {
+              hours: hours,
+              minutes: minutes,
+              seconds: seconds,
+            },
+            description: logDescription,
+            id: generateId(),
+          });
+          this._storage.setValue(project + "-logs", logs);
+          webviewView.webview.postMessage({
+            type: "update-logs",
+            logs: logs,
+          });
+
+          break;
+        
         }
       }
     });
@@ -260,6 +318,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 <div class="pane-header">
                     <div class="codicon codicon-chevron-down pane-indicator"></div>
                     <h3 class="pane-header-title">Resources</h3>
+                    <div class="actions">
+                        <div class="monaco-toolbar">
+                            <div class="monaco-action-bar">
+                                <ul class="actions-container" role="toolbar" aria-label="delete actions">
+                                    <li class="action-item menu-entry" role="presentation" custom-hover="true">
+                                        <a class="action-label codicon codicon-add" role="button" aria-label="Add Resource..." tabindex="0" id="add-resource-button"></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -267,8 +336,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 <div class="resources-list">
 
                 </div>
-                <br>
-                <button class="add-resource-button">Add Resource</button>
+
+
             </div>
             <div class="pane vertical timer-pane">
                 <div class="pane-header">
@@ -295,15 +364,30 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 <div class="pane-header">
                     <div class="codicon codicon-chevron-right pane-indicator"></div>
                     <h3 class="pane-header-title">Logs</h3>
+                    <div class="actions">
+                        <div class="monaco-toolbar">
+                            <div class="monaco-action-bar">
+                                <ul class="actions-container" role="toolbar" aria-label="delete actions">
+                                    <li class="action-item menu-entry" role="presentation" custom-hover="true">
+                                        <a class="action-label codicon codicon-add" role="button" aria-label="Add Log..." tabindex="0" id="add-log-button"></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <div class="content logs-content">
-                <div class="logs">
+
                     <div class="logs-list">
                         
                     </div>
-                </div>
+                    <div class="divider">
+
+                    </div>
+                    <label class="log-total-time">Total Time: 0:00:00</label>
+
             </div>
         
             
