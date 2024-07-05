@@ -13,6 +13,10 @@ Create a log of all resources used in project, tasks that need to be completed, 
 
 ## Release Notes
 
+### 1.1.1
+
+Fixed the sizes of panel headers
+
 ### 1.1.0
 
 Moved button to add resource to pane header, added button to manually add a log, and added label to display the total time of all the logs

@@ -23,7 +23,7 @@
 
     overflow: hidden;
 
-    width: 130%;
+    width: 100vw;
     position: relative;
     left: -20px;
 }
