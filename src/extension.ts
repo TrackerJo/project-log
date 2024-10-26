@@ -107,6 +107,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push( vscode.commands.registerCommand('projectlog.resetTimer', async (id: number) => {
 		const project = vscode.workspace.name;
+		storageManager.setValue(project + '-continue-timer', false);
 		storageManager.setValue(project + '-time', {
 			minutes: 0,
 			seconds: 0,
@@ -160,29 +161,41 @@ export function activate(context: vscode.ExtensionContext) {
 	}));
 
 	context.subscriptions.push( vscode.commands.registerCommand('projectlog.showTimerControls', async () => {
-		const choice = await vscode.window.showQuickPick([
-			{
+		const project = vscode.workspace.name;
+		const isTimerRunning = storageManager.getValue<boolean>(project + '-continue-timer');
+		const time = storageManager.getValue<{minutes: number, seconds: number, hours: number}>(project + '-time');
+		const timeGreaterThanZero = time && (time.minutes > 0 || time.seconds > 0 || time.hours > 0);
+		const choices = [];
+		if(!isTimerRunning){
+			choices.push({
 				label: "Start Timer",
 				description: "Start the timer",
 				picked: true
-			},
-			{
+			});
+		} else {
+			choices.push({
 				label: "Stop Timer",
-				description: "Stop the timer"
-			},
-			{
+				description: "Stop the timer",
+				picked: true
+			});
+		}
+		if(timeGreaterThanZero){
+			choices.push({
 				label: "Reset Timer",
 				description: "Reset the timer"
-			},
-			{
+			});
+		}
+		if(timeGreaterThanZero){
+			choices.push({
 				label: "Log Timer",
 				description: "Log the timer"
-			},
-			{
-				label: "View Timer",
-				description: "View the timer"
-			}
-		]);
+			});
+		}
+		choices.push({
+			label: "View Timer",
+			description: "View the timer"
+		});
+		const choice = await vscode.window.showQuickPick(choices);
 		if(!choice){
 			return;
 		}
@@ -219,6 +232,8 @@ function startTimer(storageManager: GlobalStorageService, sidebarProvider: Sideb
 		const project = vscode.workspace.name;
 		const continueTimer = storageManager.getValue<boolean>(project + '-continue-timer');
 		const time = storageManager.getValue<{minutes: number, seconds: number, hours: number}>(project + '-time');
+
+
 		if(time){
 			seconds = time.seconds;
 			minutes = time.minutes;
